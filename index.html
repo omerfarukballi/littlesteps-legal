@@ -3,22 +3,199 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LittleSteps – Yasal</title>
+  <title>LittleSteps - Legal</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #faf9f7; color: #2d2a26; line-height: 1.6; margin: 0; padding: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
-    h1 { font-size: 1.5rem; }
-    a { color: #7ba872; }
-    ul { padding-left: 1.25rem; }
-    li { margin: 0.5rem 0; }
+    :root {
+      --bg: #faf9f7;
+      --text: #2d2a26;
+      --muted: #6b6560;
+      --accent: #7ba872;
+      --card: #ffffff;
+      --border: #e3ddd5;
+      --chip: #f1ede7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top right, #fffefb, var(--bg) 48%);
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 1rem;
+    }
+
+    .wrap {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.3rem;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.55rem;
+    }
+
+    .lang {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .lang button {
+      border: 1px solid var(--border);
+      background: var(--chip);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 0.35rem 0.7rem;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+
+    .lang button.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    p {
+      margin: 0.65rem 0 1rem;
+      color: var(--muted);
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+
+    li {
+      margin: 0.45rem 0;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .small {
+      margin-top: 1rem;
+      font-size: 0.88rem;
+    }
   </style>
 </head>
 <body>
-  <h1>LittleSteps</h1>
-  <p>Yasal sayfalar:</p>
-  <ul>
-    <li><a href="gizlilik-politikasi.html">Gizlilik Politikası</a></li>
-    <li><a href="kullanim-kosullari.html">Kullanım Koşulları</a></li>
-    <li><a href="hesap-silme.html">Hesap Silme</a></li>
-  </ul>
+  <main class="wrap">
+    <section class="card">
+      <div class="top">
+        <h1 id="title">LittleSteps</h1>
+        <div class="lang" aria-label="Language switcher">
+          <button type="button" id="lang-tr">TR</button>
+          <button type="button" id="lang-en">EN</button>
+        </div>
+      </div>
+
+      <p id="lead">Yasal sayfalar:</p>
+      <ul>
+        <li><a id="privacy-link" href="gizlilik-politikasi.html">Gizlilik Politikası</a></li>
+        <li><a id="terms-link" href="kullanim-kosullari.html">Kullanım Koşulları</a></li>
+        <li><a id="delete-link" href="hesap-silme.html">Hesap Silme</a></li>
+      </ul>
+      <p id="hint" class="small">Dil tarayıcınıza göre otomatik seçilir, buradan değiştirebilirsiniz.</p>
+    </section>
+  </main>
+
+  <script>
+    const TEXT = {
+      tr: {
+        htmlLang: "tr",
+        title: "LittleSteps",
+        lead: "Yasal sayfalar:",
+        privacyLabel: "Gizlilik Politikası",
+        privacyHref: "gizlilik-politikasi.html",
+        termsLabel: "Kullanım Koşulları",
+        termsHref: "kullanim-kosullari.html",
+        deleteLabel: "Hesap Silme",
+        deleteHref: "hesap-silme.html",
+        hint: "Dil tarayıcınıza göre otomatik seçilir, buradan değiştirebilirsiniz.",
+      },
+      en: {
+        htmlLang: "en",
+        title: "LittleSteps",
+        lead: "Legal pages:",
+        privacyLabel: "Privacy Policy",
+        privacyHref: "privacy-policy.html",
+        termsLabel: "Terms of Service",
+        termsHref: "terms-of-service.html",
+        deleteLabel: "Account Deletion",
+        deleteHref: "account-deletion.html",
+        hint: "Language is selected automatically from your browser. You can switch it here.",
+      },
+    };
+
+    const BUTTONS = {
+      tr: document.getElementById("lang-tr"),
+      en: document.getElementById("lang-en"),
+    };
+
+    function getInitialLanguage() {
+      const stored = localStorage.getItem("littleStepsLegalLang");
+      if (stored === "tr" || stored === "en") return stored;
+      const browser = (navigator.language || "").toLowerCase();
+      return browser.startsWith("tr") ? "tr" : "en";
+    }
+
+    function applyLanguage(lang) {
+      const t = TEXT[lang] || TEXT.en;
+      document.documentElement.lang = t.htmlLang;
+      document.getElementById("title").textContent = t.title;
+      document.getElementById("lead").textContent = t.lead;
+
+      const privacy = document.getElementById("privacy-link");
+      privacy.textContent = t.privacyLabel;
+      privacy.href = t.privacyHref;
+
+      const terms = document.getElementById("terms-link");
+      terms.textContent = t.termsLabel;
+      terms.href = t.termsHref;
+
+      const del = document.getElementById("delete-link");
+      del.textContent = t.deleteLabel;
+      del.href = t.deleteHref;
+
+      document.getElementById("hint").textContent = t.hint;
+
+      BUTTONS.tr.classList.toggle("active", lang === "tr");
+      BUTTONS.en.classList.toggle("active", lang === "en");
+
+      localStorage.setItem("littleStepsLegalLang", lang);
+    }
+
+    BUTTONS.tr.addEventListener("click", () => applyLanguage("tr"));
+    BUTTONS.en.addEventListener("click", () => applyLanguage("en"));
+
+    applyLanguage(getInitialLanguage());
+  </script>
 </body>
 </html>

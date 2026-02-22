@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LittleSteps - Hesap Silme</title>
+  <title>LittleSteps - Account Deletion</title>
   <style>
     :root {
       --bg: #f7f5f2;
@@ -209,62 +209,62 @@
 </head>
 <body>
   <main class="wrap">
-    <h1>LittleSteps - Hesap Silme</h1>
+    <h1>LittleSteps - Account Deletion</h1>
     <p class="lead">
-      Hesabınıza giriş yapın, ardından kalıcı silme işlemini onaylayın.
-      Bu işlem geri alınamaz.
+      Sign in to your account, then confirm permanent deletion.
+      This action cannot be undone.
     </p>
 
     <div id="status" role="alert" aria-live="polite"></div>
 
     <section class="card" id="login-card">
-      <h2>1) Giriş Yap</h2>
+      <h2>1) Sign In</h2>
       <form id="login-form">
         <div class="form-row">
-          <label for="email">E-posta</label>
+          <label for="email">Email</label>
           <input id="email" name="email" type="email" autocomplete="email" required>
         </div>
         <div class="form-row">
-          <label for="password">Şifre</label>
+          <label for="password">Password</label>
           <input id="password" name="password" type="password" autocomplete="current-password" required>
         </div>
         <div class="button-row">
-          <button id="login-btn" class="btn-primary" type="submit">Giriş Yap</button>
+          <button id="login-btn" class="btn-primary" type="submit">Sign In</button>
         </div>
       </form>
-      <p class="muted">Not: "Kullanıcı adı" yerine e-posta adresinizi kullanın.</p>
+      <p class="muted">Note: Use your email address instead of a username.</p>
     </section>
 
     <section class="card" id="delete-card" hidden>
-      <h2>2) Hesabı Kalıcı Olarak Sil</h2>
+      <h2>2) Permanently Delete Account</h2>
       <p class="account-meta">
-        Giriş yapan hesap: <strong id="user-email">-</strong>
+        Signed-in account: <strong id="user-email">-</strong>
       </p>
       <ul>
-        <li>Hesap silinince erişim tamamen kapanır.</li>
-        <li>Bu kullanıcıya bağlı veriler kalıcı olarak silinir.</li>
-        <li>İşlem geri alınamaz.</li>
+        <li>Access to your account will be permanently removed.</li>
+        <li>Data linked to this user will be permanently deleted.</li>
+        <li>This action cannot be undone.</li>
       </ul>
 
       <form id="delete-form">
         <div class="form-row">
-          <label for="delete-confirm-text">Onay için <code>HESABIMI SIL</code> yazın</label>
+          <label for="delete-confirm-text">Type <code>DELETE MY ACCOUNT</code> to confirm</label>
           <input id="delete-confirm-text" type="text" required>
         </div>
         <label class="check">
           <input id="delete-confirm-checkbox" type="checkbox" required>
-          <span>Bu işlemin kalıcı olduğunu anlıyorum.</span>
+          <span>I understand this action is permanent.</span>
         </label>
         <div class="button-row">
-          <button id="delete-btn" class="btn-danger" type="submit">Hesabımı Kalıcı Olarak Sil</button>
-          <button id="logout-btn" class="btn-ghost" type="button">Çıkış Yap</button>
+          <button id="delete-btn" class="btn-danger" type="submit">Delete My Account Permanently</button>
+          <button id="logout-btn" class="btn-ghost" type="button">Sign Out</button>
         </div>
       </form>
     </section>
 
     <p class="footer-links">
-      <a href="gizlilik-politikasi.html">Gizlilik Politikası</a> |
-      <a href="kullanim-kosullari.html">Kullanım Koşulları</a>
+      <a href="privacy-policy.html">Privacy Policy</a> |
+      <a href="terms-of-service.html">Terms of Service</a>
     </p>
   </main>
 
@@ -305,7 +305,7 @@
     function setLoggedIn(user) {
       loginCard.hidden = true;
       deleteCard.hidden = false;
-      userEmail.textContent = user?.email ?? "(e-posta bilgisi yok)";
+      userEmail.textContent = user?.email ?? "(email not available)";
     }
 
     function setLoggedOut() {
@@ -317,7 +317,7 @@
     }
 
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-      setStatus("Supabase ayarları eksik. Sayfayı kullanmak için URL ve anon key tanımlanmalı.", "error");
+      setStatus("Supabase config is missing. Please provide URL and anon key.", "error");
       loginButton.disabled = true;
       deleteButton.disabled = true;
       throw new Error("Missing Supabase config");
@@ -341,22 +341,22 @@
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
 
-      setLoading(loginButton, true, "Giriş yapılıyor...", "Giriş Yap");
+      setLoading(loginButton, true, "Signing in...", "Sign In");
 
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      setLoading(loginButton, false, "Giriş yapılıyor...", "Giriş Yap");
+      setLoading(loginButton, false, "Signing in...", "Sign In");
 
       if (error) {
-        setStatus(`Giriş başarısız: ${error.message}`, "error");
+        setStatus(`Sign-in failed: ${error.message}`, "error");
         return;
       }
 
       setLoggedIn(data.user);
-      setStatus("Giriş başarılı. Hesap silme adımı hazır.", "success");
+      setStatus("Sign-in successful. Account deletion step is ready.", "success");
       document.getElementById("password").value = "";
     });
 
@@ -367,47 +367,47 @@
       const confirmText = document.getElementById("delete-confirm-text").value.trim();
       const confirmCheckbox = document.getElementById("delete-confirm-checkbox").checked;
 
-      if (confirmText !== "HESABIMI SIL") {
-        setStatus("Devam etmek için onay metnini tam olarak yazın: HESABIMI SIL", "error");
+      if (confirmText !== "DELETE MY ACCOUNT") {
+        setStatus("To continue, type exactly: DELETE MY ACCOUNT", "error");
         return;
       }
 
       if (!confirmCheckbox) {
-        setStatus("Devam etmek için onay kutusunu işaretleyin.", "error");
+        setStatus("Please check the confirmation box to continue.", "error");
         return;
       }
 
       const confirmed = window.confirm(
-        "Hesabınız ve bağlı verileriniz kalıcı olarak silinecek. Bu işlem geri alınamaz. Devam edilsin mi?"
+        "Your account and related data will be deleted permanently. This cannot be undone. Continue?"
       );
       if (!confirmed) {
         return;
       }
 
-      setLoading(deleteButton, true, "Siliniyor...", "Hesabımı Kalıcı Olarak Sil");
+      setLoading(deleteButton, true, "Deleting...", "Delete My Account Permanently");
 
       const { error } = await supabase.rpc("delete_my_account");
 
-      setLoading(deleteButton, false, "Siliniyor...", "Hesabımı Kalıcı Olarak Sil");
+      setLoading(deleteButton, false, "Deleting...", "Delete My Account Permanently");
 
       if (error) {
         const maybeMissingFunction = error.message?.toLowerCase().includes("delete_my_account");
         const suffix = maybeMissingFunction
-          ? " Supabase'de delete_my_account fonksiyonunu migration ile oluşturduğunuzdan emin olun."
+          ? " Make sure the delete_my_account function exists in Supabase."
           : "";
-        setStatus(`Hesap silinemedi: ${error.message}.${suffix}`, "error");
+        setStatus(`Account deletion failed: ${error.message}.${suffix}`, "error");
         return;
       }
 
       await supabase.auth.signOut();
       setLoggedOut();
-      setStatus("Hesabınız kalıcı olarak silindi.", "success");
+      setStatus("Your account has been permanently deleted.", "success");
     });
 
     logoutButton.addEventListener("click", async () => {
       await supabase.auth.signOut();
       setLoggedOut();
-      setStatus("Çıkış yapıldı.", "info");
+      setStatus("Signed out.", "info");
     });
 
     supabase.auth.onAuthStateChange((_event, session) => {
