@@ -6,6 +6,7 @@ Bu klasördeki HTML dosyalarını **bir yerde yayınlayıp** uygulama ve mağaza
 
 - `gizlilik-politikasi.html` → Gizlilik Politikası
 - `kullanim-kosullari.html` → Kullanım Koşulları
+- `hesap-silme.html` → E-posta + şifre ile giriş ve hesap silme sayfası
 
 ## Nasıl yayınlanır?
 
@@ -14,19 +15,21 @@ Bu klasördeki HTML dosyalarını **bir yerde yayınlayıp** uygulama ve mağaza
 1. Bu projeyi GitHub’a push edin.
 2. Repo → **Settings** → **Pages** → Source: **Deploy from a branch**.
 3. Branch: `main` (veya `master`), folder: **/ (root)** veya **docs**.
-4. `public` klasörünü repo kökünde tutun. URL’ler örnek olarak:
-   - `https://KULLANICI_ADI.github.io/LittleSteps/public/gizlilik-politikasi.html`
-   - `https://KULLANICI_ADI.github.io/LittleSteps/public/kullanim-kosullari.html`
+4. Bu repoda dosyalar root'ta olduğu için URL’ler örnek olarak:
+   - `https://KULLANICI_ADI.github.io/REPO_ADI/gizlilik-politikasi.html`
+   - `https://KULLANICI_ADI.github.io/REPO_ADI/kullanim-kosullari.html`
+   - `https://KULLANICI_ADI.github.io/REPO_ADI/hesap-silme.html`
 
-(GitHub Pages bazen sadece `docs` klasöründen yayın yapar; o zaman `public` içeriğini `docs` altına kopyalayıp `docs/gizlilik-politikasi.html` gibi kullanabilirsiniz.)
+(Eğer Pages `docs` klasöründen yayınlanacaksa dosyaları `docs/` altına taşıyıp aynı dosya adlarıyla kullanın.)
 
 ### Seçenek 2: Vercel / Netlify
 
 - Projeyi Vercel veya Netlify’a bağlayın.
-- Root veya “Public directory” olarak `public` seçin (veya `public` içeriğini site köküne koyun).
+- Root dizini doğrudan bu repo olacak şekilde yayınlayın.
 - Dağıtımdan sonra örnek URL’ler:
   - `https://your-site.vercel.app/gizlilik-politikasi.html`
   - `https://your-site.vercel.app/kullanim-kosullari.html`
+  - `https://your-site.vercel.app/hesap-silme.html`
 
 ### Seçenek 3: Kendi sunucunuz / alan adınız
 
@@ -41,3 +44,8 @@ Yayınladıktan sonra proje kökündeki `app.json` içinde `extra` bölümünde:
 - `termsOfServiceUrl` → Kullanım koşulları sayfasının **tam URL’i**
 
 değerlerini bu adreslerle değiştirin.
+
+## Hesap silme için backend notu
+
+`hesap-silme.html`, Supabase üzerinde `delete_my_account` RPC fonksiyonunu çağırır.
+Bu fonksiyonun Supabase projesinde tanımlı olması gerekir.
